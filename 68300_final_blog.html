@@ -1,0 +1,569 @@
+<!--# Define the full HTML content manually using the latest state from the canvas editor
+canvas_html_content = """-->
+<DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Self-Supervised Caustics Reduction in Undersea Vision</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #003c58, #006d77);
+      color: #f5faff;
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+    .section-heading-alt {
+  font-family: Verdana, sans-serif;
+  font-weight: bold;
+  font-size: 2.2rem;
+  color: white;
+  background-color: #002f45;  /* dark blue */
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  margin-top: 2rem;
+  margin-bottom: 1.25rem;
+}
+    .header-title {
+  font-family: Verdana, sans-serif;
+  font-weight: bold;
+  font-size: 2.5rem;
+  margin-top: 2rem;
+}
+    .section {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    .section h2 {
+      color: #88e1f2;
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+
+    .sidebar .nav-link {
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: #88e1f2 !important;   /* overrides Bootstrap */
+  font-size: 0.95rem;
+  padding: 0.25rem 0;
+}
+
+.sidebar .nav-link:hover {
+  color: #ffffff !important;   /* white on hover */
+}
+    a {
+      color: #20d0f0;
+      text-decoration: none;
+      font-family: 'IBM Plex Sans', sans-serif;
+      transition: color 0.3s ease;
+    }
+    a:hover {
+      color: #ffffff;
+    }
+    .video-container video, .img-fluid {
+      border: 2px solid #88e1f2;
+      border-radius: 10px;
+    }
+    .sidebar {
+      background-color: #002f45 !important; /* force override with solid */
+      border-radius: 10px;
+      padding: 1rem;
+      position: sticky;
+      top: 100px;
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+    .citation {
+      font-size: 0.9rem;
+      background-color: rgba(255, 255, 255, 0.08);
+      border-left: 3px solid #88e1f2;
+      padding: 1rem;
+      border-radius: 10px;
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+    .caustics-bubble {
+      background: rgba(255, 255, 255, 0.08);
+      border-left: 4px solid #88e1f2;
+      border-radius: 15px;
+      padding: 1rem 1.5rem;
+      font-size: 0.95rem;
+      font-family: 'IBM Plex Sans', sans-serif;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .container-caustics-bubble {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: 2rem;
+    }
+
+.drop-caustics {
+  width: 320px;
+  height: 320px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  border-radius: 67% 33% 28% 72% / 59% 52% 48% 41%;
+  box-shadow:
+    inset 20px 20px 20px rgba(0, 0, 0, 0.05),
+    25px 35px 20px rgba(0, 0, 0, 0.05),
+    25px 20px 20px rgba(0, 0, 0, 0.05),
+    inset 25px 30px 30px rgba(255, 255, 255, 0.08);
+  animation: fadein 1.5s ease;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #f5faff;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.drop-caustics::before,
+.drop-caustics::after {
+  content: '';
+  overflow: hidden;
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.drop-caustics::before {
+  width: 35px;
+  height: 35px;
+  top: 50px;
+  left: 80px;
+}
+.drop-caustics::after {
+  width: 15px;
+  height: 15px;
+  top: 90px;
+  left: 110px;
+}
+
+.drop-caustics .content {
+  text-align: center;
+  padding: 30px;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.sidebar strong {
+  font-size: 1.4rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.caustics-gif-row {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.caustics-gif-row img {
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+  border: 2px solid #88e1f2;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-md-10 text-center">
+  <div class="header-title">Self-Supervised Caustics Reduction in Undersea Vision</div>
+  <div class="mb-2">Final Project for 6.8300 - MIT</div>
+  <div class="row justify-content-center mt-3">
+    <div class="col-md-5">
+      <strong>Claire Schnorr</strong>, ENS, USN<br>
+      <a href="mailto:cschnorr@mit.edu" class="text-info">cschnorr@mit.edu</a><br>
+      Course 2, MIT-WHOI Joint Program
+    </div>
+    <div class="col-md-5">
+      <strong>Eric Peterson</strong><br>
+      <a href="mailto:peterson@g.harvard.edu" class="text-info">peterson@g.harvard.edu</a><br>
+      Department of Physics, Harvard University
+    </div>
+  </div>
+</div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-3 sidebar ps-4">
+        <strong>Outline</strong>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="#introduction">Introduction</a>
+            <ul class="nav flex-column ms-3">
+              <li class="nav-item"><a class="nav-link" href="#goal">Project Goal</a></li>
+              <li class="nav-item"><a class="nav-link" href="#caustics">What are Caustics?</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#part1"><b>Part 1: Low-Compute Caustic Reduction Model</b></a>
+            <ul class="nav flex-column ms-3">
+              <li class="nav-item"><a class="nav-link" href="#rgb-lab">RGB v. LAB – Caustics Variation</a></li>
+              <li class="nav-item"><a class="nav-link" href="#median">Temporal Median Filtering</a></li>
+              <li class="nav-item"><a class="nav-link" href="#gaussian">Steerable Gaussian Kernel</a></li>
+              <li class="nav-item"><a class="nav-link" href="#outlook1">Outlook</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#part2">Part 2: Caustics Reduction Model Pruning</a>
+            <ul class="nav flex-column ms-3">
+              <li class="nav-item"><a class="nav-link" href="#motivation">Motivation</a></li>
+              <li class="nav-item"><a class="nav-link" href="#pruning">Model Pruning & Quantization</a></li>
+              <li class="nav-item"><a class="nav-link" href="#outlook2">Outlook</a></li>
+            </ul>
+          </li>
+        </ul>
+ 
+      </div>
+
+      <div class="col-md-9">
+        <div id="introduction">
+          <h1 class="section-heading-alt">Introduction</h1>
+         </div>
+
+        <div class="section" id="goal">
+          <h2>Project Objective</h2>
+          <p>Underwater vision faces unique challenges—especially due to caustics created by refracted light. These distortions can disrupt tasks like segmentation and 3D reconstruction. <br> <br>
+            Our project proposes a self-supervised method to remove these caustics, leveraging temporal consistency across video frames without requiring labeled ground truth.
+            The second portion of the project focuses on model pruning and quantization to further enhance efficiency. We will explore the trade-offs between model size and performance, aiming to create a model that is both effective and deployable on resource-constrained devices.
+          </p>
+        </div>
+
+        <div class="d-flex justify-content-center align-items-start mt-5" style="gap: 40px;">
+
+          <!-- Left: Caustics Bubble -->
+          <div class="drop-caustics" style="width: 400px; height: 400px; margin-top: 10px;">
+            <div class="content" style="padding: 35px;">
+              <h2 style="--clr: #88e1f2;">💡</h2>
+              <p><strong style="font-size: 1.3rem;"><b>What are Caustics?</b></strong><br>
+              Caustics are flickering light patterns caused by sunlight refracting through surface waves. These patterns distort underwater images and interfere with computer vision tasks like segmentation and 3D reconstruction.</p>
+            </div>
+          </div>
+
+          <!-- Right: GIF stack -->
+          <div class="d-flex flex-column align-items-start" style="gap: 20px;">
+
+            <div class="d-flex align-items-center">
+              <img src="./images/loop_org.gif" class="img-fluid" style="width: 220px; border: 2px solid #88e1f2; border-radius: 10px; margin-right: 10px;">
+              <span class="text-light" style="font-size: 0.95rem;">Original Underwater Scene</span>
+            </div>
+
+            <div class="d-flex align-items-center">
+              <img src="./images/loop_caustic.gif" class="img-fluid" style="width: 220px; border: 2px solid #88e1f2; border-radius: 10px; margin-right: 10px;">
+              <span class="text-light" style="font-size: 0.95rem;">Detected Caustic Regions</span>
+            </div>
+
+            <div class="d-flex align-items-center">
+              <img src="./images/loop_diff.gif" class="img-fluid" style="width: 220px; border: 2px solid #88e1f2; border-radius: 10px; margin-right: 10px;">
+              <span class="text-light" style="font-size: 0.95rem;">Temporal Difference Output</span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div id="part1">
+          <h1 class="section-heading-alt">Part 1: Low-Compute Caustic Reduction Model</h1>
+         </div>
+
+         <div class="section" id="rgb-lab">
+          <h2>RGB v. LAB - Caustics Variation</h2>
+            <p>
+              The proposed hypothesis was that in a single-pose RGB video of an undersea scene with caustics,
+              when converted to the <strong>CIELAB</strong> color scheme (also known as <strong>LAB</strong>),
+              the only variation would occur in the <strong>L (lightness)</strong> channel.
+            </p>
+            <p>
+              After running several tests on random points and patches over time, the hypothesis was confirmed:
+              the <strong>L-channel showed temporal variation</strong>, while <strong>A and B channels remained largely static</strong>.
+              This observation led us to explore <strong>suppression methods targeting the L-channel</strong>,
+              beginning with the simplest (temporal median filtering), and then extending into more sophisticated techniques
+              with <strong>steerable Gaussian filters</strong>. The following figures illustrate two example outputs of the results of our analysis.
+            </p>
+            <div class="row text-center mt-4 g-4">
+            <div class="col-md-6">
+              <img src="./images/patch_1_mean_lab_timeseries.png" class="img-fluid" style="width: 100%; height: auto; object-fit: contain; border: 2px solid #88e1f2; border-radius: 10px;" alt="Figure 1">
+              <small class="text-light d-block mt-2">Figure 1: Tracked CIELAB Values for Random Patch 1</small>
+            </div>
+            <div class="col-md-6">
+              <img src="./images/patch_2_mean_lab_timeseries.png" class="img-fluid" style="width: 100%; height: auto; object-fit: contain; border: 2px solid #88e1f2; border-radius: 10px;" alt="Figure 2">
+              <small class="text-light d-block mt-2">Figure 2: Tracked CIELAB Values for Random Patch 2</small>
+            </div>
+            
+          </div>
+
+            <blockquote class="citation">
+              <strong>Important Caveat:</strong> Caustics are not the only contributors to L-channel variation.
+              Other phenomena—such as backscattering and marine life entering the scene—also alter lightness and must be considered.
+            </blockquote>
+        </div>
+
+
+        <div class="section" id="temporal-median">
+          <h2>Temporal Median Filtering</h2>
+          <p>One of the persistent challenges in underwater imaging is the presence of caustics—dynamic light patterns formed due to the refraction and focusing of sunlight through surface waves. These artifacts can obscure true scene content and complicate computer vision tasks like structure-from-motion, semantic segmentation, and photometric consistency. 
+            <br> <br> To address this, I applied temporal median filtering to a sequence of images captured from a static, single-pose camera. The aim was to compute a stable L-value (luminance in the CIELAB color space) for each pixel, representing the temporally median-averaged lighting, which filters out short-lived caustic patterns.</p>
+          <p>We tested the filter on a sample video and observed a significant reduction in caustic patterns, while preserving the overall structure of the scene.</p>
+          <div class="text-center mt-4">
+              <video controls loop muted playsinline style="max-width: 720px; width: 100%; border-radius: 10px; border: 2px solid #88e1f2;">
+                <source src="./images/l_flattened_trim_output.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="text-light mt-2">Figure 3: Temporal Median Filter Output</p>
+            </div>
+
+            <h3>Methodology</h3>
+              <ul>
+                <li>
+                  <strong>Conversion to L-values:</strong>
+                  Each frame in the video sequence was converted from RGB to the CIELAB color space using standard conversion routines (e.g., <code>cv2.cvtColor(..., cv2.COLOR_RGB2LAB)</code>). Only the L-channel, representing perceptual lightness, was retained for analysis.
+                </li>
+                <li>
+                  <strong>Temporal Median Filter:</strong><br>
+                  For each pixel coordinate \( (x, y) \), a temporal window was constructed using the L-values across \( N \) frames.<br>
+                  The median was computed as:
+                  \[
+                  L_{\text{median}}(x, y) = \text{median}\{L_t(x, y) \mid t = 1, \dots, N\}
+                  \]
+                  This approach is resistant to outliers—such as momentary flashes of light or shadows from caustics.
+                </li>
+                <li>
+                  <strong>Reconstruction:</strong><br>
+                  The median L-value image was used as a "base luminance" representation of the scene, largely free from transient lighting. Optionally, the original chroma channels (a*, b*) from a reference frame can be combined with the median L-image to reconstruct a pseudo-RGB image with reduced caustic effects.
+                </li>
+              </ul>
+            <h3>Rationale</h3>
+              <p>
+                The median filter is particularly well-suited to undersea environments due to its robustness to non-Gaussian noise and outliers. As shown in Treiber et al., 2009, median-based approaches are effective for background estimation in dynamic scenes, and this principle translates well to marine imagery where illumination is the dynamic variable.
+              </p>
+        </div>
+
+        <div class="section" id="gaussian">
+            <h2>Steerable Gaussian Kernel</h2>
+
+            <p>After applying the temporal median filter, we observed that while caustic patterns were eliminated, the frame was blurry and edged were not preserved.
+               To further enhance the image quality, we implemented a steerable Gaussian kernel to smooth out these artifacts while preserving the overall structure of the scene. 
+              This process attempted a more advanced, but still low compute technique to reduce the caustics pattern.</p>
+
+            <h3>Methodology</h3>
+            <ol>
+              <li>
+                <strong>Compute Horn–Schunck Optical Flow</strong><br>
+                Estimate the global flow field \( \mathbf{u}, \mathbf{v} \) over the L-channel by minimizing:
+                <p>
+                  \[
+                  E(u, v) = \iint \left[ (I_x u + I_y v + I_t)^2 + \alpha^2 \left( \|\nabla u\|^2 + \|\nabla v\|^2 \right) \right] dx\,dy
+                  \]
+                </p>
+                <ul>
+                  <li>\( I_x, I_y, I_t \): spatial and temporal intensity derivatives</li>
+                  <li>\( \alpha \): global smoothness weight</li>
+                </ul>
+              </li>
+
+              <li>
+                <strong>Extract Flow Angles</strong><br>
+                For each patch, compute:
+                <p>
+                  \[
+                  \theta = \arctan2(v, u)
+                  \]
+                </p>
+                Use <code>np.arctan2(v, u)</code> to preserve directional accuracy across all quadrants.
+              </li>
+
+              <li>
+                <strong>Apply Steerable Filtering per Patch</strong>
+                <ul>
+                  <li>Extract local patches from the L-channel</li>
+                  <li>Apply a <strong>steerable Gaussian derivative filter</strong> oriented at angle \( \theta \). Angles orthogonal to \( \theta \) were also tested and improved edge preservation.</li>
+                </ul>
+              </li>
+
+              <li>
+                <strong>Construct Oriented Filters</strong>
+                <ul>
+                  <li>
+                    <strong>Manual Construction:</strong> Combine \( G_x \) and \( G_y \) via:
+                    <p>
+                      \[
+                      G_\theta = \cos(\theta) G_x + \sin(\theta) G_y
+                      \]
+                    </p>
+                    We experimented with applying steerable filters both <strong>orthogonal</strong> and <strong>parallel</strong> to the estimated motion direction. Orthogonal filtering tended to suppress caustics more effectively by smoothing across their directional edges.
+                  </li>
+                  <li>
+                    <strong>Library-based:</strong> Use tools like:
+                    <ul>
+                      <li><code>scikit-image</code>’s filters</li>
+                      <li><code>SteerablePyramid</code> (Python)</li>
+                      <li><code>scipy.ndimage.gaussian_filter</code> with directional masks</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+
+
+
+
+         <div id="part2">
+          <h1 class="section-heading-alt">Part 2: Caustics Reduction Model Pruning</h1>
+          <div class="section" id="motivation">
+            <h2>Motivation</h2>
+            <p>
+              An early work on caustics removal in underwater images treated caustics identification as a sematic segmentation task, in which a deep neural network can be trained to perform pixel-wise identification of seafloor regions affected by caustics [1]. With an output segmentation mask, caustics can then be removed from the image by transferring color values from pixels unaffected by caustics in matched images of the same scene. To this end, images of seven different underwater scenes featuring caustics were collected, along with corresponding images where the caustics were removed by artificially blocking the sunlight above the water. These images were used to produce (binary) ground truth segmentation masks by taking the difference of the scene images with and without caustics and binarizing the result. The segmentation masks can then serve as training labels for supervised learning of caustics patterns. The results were published as the R-CAUSTICS dataset [1]. Figure 1 shows three examples of scenes and the corresponding ground truth caustics masks. Several scenes from this dataset also feature stereo images for SfM pipeline testing. We used this dataset as a starting point for developing a lightweight, deep learning-based approach to caustics identification.
+            </p>
+            <div class="text-center">
+              <img src="./images/figure1_720.png" class="img-fluid" style="max-width: 720px; border: 2px solid #88e1f2; border-radius: 10px;">
+              <p class="text-light mt-2">Figure 1: Examples images and ground truth caustics patterns from scenes 2, 3 and 7 of the R-CAUSTICS dataset.</p>
+            </div>
+          </div>
+
+          <div class="section" id="training">
+            <h2>Training Setup</h2>
+            <p>
+              The authors of the [1] trained six different fully-convolutional network (FCN) models across several different test-training splits of R-CAUSTICS. Model performance was quantified by the F1 score for caustics and non-caustics pixels respectively, as well as the total accuracy (percentage of pixels correctly classified). Based on the variety of the given scenes, they determined that training the model on subsets 3, 4, 5, 6 and 7 and testing it on subsets 1 and 2 was optimal, and we adopted this test-training split as well. In this dataset split, the performances of the six FCN models were more-or-less similar, with an F1 classification score of about 82% for caustic pixels and about 97% for non-caustic pixels, with total classification accuracies of about 95%. In the R-CAUSTICS images there are typically many more non-caustic pixels than caustic pixels, hence the total accuracy being close to the non-caustic prediction accuracy.
+            </p>
+            <p>
+              The trained model weights from the original work were not made publicly available, so we had to re-train the models ourselves before exploring model compression techniques to reduce the model sizes. We chose to focus on the FCN-ResNet50, FCN-ResNet101, and SegNet models with the expectation that while their performances may be similar prior to model compression, the differences in their architectures could make for an interesting contrast after compression. For model training and evaluation, we used a laptop with an NVIDIA GeForce RTX 4050 GPU.  Due to memory limitations, we trained the models with a batch size of 40 (rather than 60 as in the original paper), a shorter epoch length (1,000 image patches rather than 10,000) and over a limited subset of 180 images from the aforementioned R-CAUSTICS subset. Otherwise, we used the same training schedule (e.g. learning rate, momentum and weight decay). Training curves showing the cross-entropy loss and cross-validation accuracy (percentage of correctly-classified pixels) for our conditions are shown in Figure 2.
+            </p>
+            <div class="text-center">
+              <img src="./images/figure2_720.png" class="img-fluid" style="max-width: 720px; border: 2px solid #88e1f2; border-radius: 10px;">
+              <p class="text-light mt-2">Figure 2: Training loss and cross-validation accuracy for training the three selected FCN models over R-CAUSTICS subsets 3, 4, 5, 6 and 7.</p>
+            </div>
+          </div>
+
+          <div class="section" id="pruning">
+            <h2>Model Pruning & Quantization</h2>
+            <p>
+              Having trained several deep neural networks for caustics identification, we return to our original goal of developing a lightweight model for caustics identification and removal. To that end, we explored two approaches to compressing the models we trained: pruning and quantization. Pruning removes weights from network layers, while quantization reduces the numerical precision of the model parameters and activations. Pruning and quantization are commonly used to together to reduce the model size and inference cost of deep neural networks.
+            </p>
+            <p>
+              We considered both unstructured pruning and channel-wise structured pruning. Unstructured pruning, in which the weights with the smallest individual magnitudes are zeroed-out, is particularly easy to implement using standard PyTorch libraries and can reduce the total model size by eliminating parameters. However, unstructured pruning typically does not improve inference time in practice without specialized hardware and frameworks for handling sparse arrays, as standard hardware and libraries continue treat data and models as dense arrays, albeit with many zero elements. In contrast, channel-wise pruning ranks entire channels by their importance  (e.g. by the L2- norm of the set of weights corresponding to that channel) and prunes the channels with the smallest importance scores. This leads to smaller tensors and fewer FLOPs at the trade-off of reduced model accuracy due to the more aggressive pruning strategy. In the end, we chose to implement channel-wise pruning, as it is more likely to lead a meaningful improvement in inference time.
+            </p>
+            <p>
+              First, we pruned the ResNet50 and ResNet101 models that we trained earlier. ResNet50 and ResNet101 both consist of a series of “bottleneck” blocks comprised by 1x1 and 3x3 convolution layers separated by BatchNorm layers and ending in ReLU activation functions. Compared to ResNet50, ResNet101 contains 17 additional bottleneck blocks, which results in 61 layers in total. ResNet50 and ResNet101 make for a useful comparison of pruning effectiveness because overparametrized models are often able to find a better global optimum during initial training while retaining some of the additional accuracy after pruning.  In contrast to the ResNet models, SegNet is a simpler encoder-decoder architecture based on VGG16. We measured the parameter numbers and FLOPs for each of these models prior to pruning, which are summarized in Table 1.
+            </p>
+            <table class="table table-bordered text-light" style="max-width: 640px; margin: auto;">
+              <thead class="table-light text-dark">
+                <tr>
+                  <th></th>
+                  <th>FCN-ResNet50</th>
+                  <th>FCN-ResNet101</th>
+                  <th>SegNet</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Parameters</td>
+                  <td>32.9</td>
+                  <td>51.9</td>
+                  <td>29.4</td>
+                </tr>
+                <tr>
+                  <td>GFLOPs</td>
+                  <td>53.2</td>
+                  <td>83.0</td>
+                  <td>61.4</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="text-center text-light mt-2">Table 1: Parameters and FLOP operations associated with selected FCN models prior to pruning</p>
+
+            <p>
+              In order to study how lightweight the resulting models could be made, we pruned each of the models with a variable pruning ratio, ranging from 0.5 to 0.95. The pruning ratio was applied globally, rather than per-layer, for a more aggressive pruning. Note that the final convolutional layer was eligible for pruning, as that would affect the number of classes in the semantic segmentation task (here, 2). After pruning, we finetuned the models for 3 epochs on the test set. The training accuracy loss and percentage of FLOPs pruned are plotted for ResNet50, ResNet101, and SegNet in Figure 3.
+            </p>
+            <div class="text-center">
+              <img src="./images/figure3_720.png" class="img-fluid" style="width: 90%; border: 2px solid #88e1f2; border-radius: 10px;">
+
+              <p class="text-light mt-2">Figure 3: Accuracy loss and FLOPs pruned as a function of pruning ratio for the three selected models. The purple curve and yellow curve show the accuracy loss after pruning and after pruning plus finetuning, respectively.</p>
+            </div>
+          </div>
+
+          <div class="section" id="observations">
+            <h2>Observations</h2>
+            <p>
+              The loss of accuracy upon initial pruning is fairly constant across models and pruning ratios, and the accuracy of all models is mostly recovered by fine-tuning for moderate (40-60%) pruning ratios. There are also several instances in which the accuracy slightly increases above the baseline after finetuning, which could be attributable to the “lottery ticket hypothesis,” in which pruning isolates a more effective subnetwork [2]. Alternatively, the occasional improvement in accuracy above the baseline could be due to the regularization effect of pruning and retraining, which can help the model escape sharp local minima.
+            </p>
+            <p>
+              Interestingly, the post-finetuning accuracy loss is generally worse for the ResNet101 model than for the ResNet50 model, in contrast to our hypothesis that many of weights in the more heavily-overparameterized model are redundant. This can potentially be explained by considering the structures of the two models. In particular, ResNet101 is a deeper model than ResNet50 but has the same width (number of channels). Channel-wise pruning reduces the width of the convolutional layers but leaves the depth unchanged, and in a deeper network, the effect of pruning early layers propagates further downstream, making the deeper model (ResNet101) potentially more sensitive to pruning. 
+            </p>
+            <p>
+              Among the three models, SegNet is the most robust to channel-wise pruning. Remarkably, we find that  over 95% of parameters can be pruned while an incurring an accuracy loss of less than 5%. This robustness to pruning can also potentially be explained by the model architecture. Unlike the ResNet models, SegNet does not feature residual connections, which force strict alignment of shapes and make pruning less flexible. The increased flexibility allows for greater independence between layers, enabling more aggressive pruning without disrupting downstream representations.
+            </p>
+            <p>
+              The two approaches we considered for quantizing the models were QAT and dynamic quantization. [[dynamic quantization gives no savings for convolutional layers]] [[QAT not compatible with off-the-shelf ResNet models – or, at-least, it requires fusing layers…]] [[in QAT, we fine-tune on the test data]]
+            </p>
+            <p>
+              [[definitely show some visuals of the pruned/quantized models applied to real images!]]
+            </p>
+            <p>
+              [[must measure inference time…]]
+            </p>
+          </div>
+
+          <div class="section" id="outlook2">
+            <h2>Outlook</h2>
+            <p>
+              In the future, it could be valuable to study whether ViTs can outperform CNNs for caustics segmentation, as caustics often span large spatial extents and ViTs excel in modeling long-range dependencies. While ViTs typically require more memory and compute, they could also be amenable to pruning.  [[also about self-supervised approaches that we didn’t get around to trying…]]
+            </p>
+          </div>
+        </div>
+
+
+
+        
+        <div id="part2">
+          <h1 class="section-heading-alt">Conclusion and Future Directions</h1>
+         </div>
+
+         <div class="section" id="conclusion">
+          <p> </p>
+        </div>
+
+  
+
+        <div class="section" id="discussion">
+          <h2>Summary and Implications</h2>
+          <p>This work aims to reduce caustic interference using a self-supervised and efficient model deployable on embedded systems. If successful, it can serve as a preprocessing step for undersea robotics, making downstream computer vision more robust in real-world deployments.</p>
+        </div>
+
+        <div class="section" id="references">
+          <h2>Bibliography</h2>
+          <div class="citation">
+            [1] P. Agrafiotis, K. Karantzalos, IEEE 2023.<br>
+            [2] Sauder & Tuia, ECCV 2024.<br>
+            [3] Forbes et al., IEEE J. Ocean. Eng., 2019.<br>
+            [4] Agrafiotis et al., IEEE J. Ocean. Eng., 2023.<br>
+            [5] Zhang et al., IEEE RAL, 2024.<br>
+            [6] Hernandez & Brown, arXiv:2005.04305.<br>
+            [7] Agrafiotis et al., IEEE J. Ocean. Eng., 2023 (R-CAUSTIC dataset).
+            [8] Freeman & Adelson, IEEE PAMI, 1991.<br>
+            [9] Treiber et al., IEEE PAMI, 2009.<br>
+            [10] Zhang et al., arXiv:2305.04305.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
