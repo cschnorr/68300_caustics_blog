@@ -420,6 +420,27 @@ canvas_html_content = """-->
             </ol>
           </div>
 
+        <div class="section" id="results">
+          <h2>Result Analysis</h2>
+          
+            <p>
+              We applied a steerable Gaussian kernel to the L-channel of the video sequence in an effort to attenuate the impact of undersea caustics. The results indicated only a marginal reduction in caustic intensity. 
+              Figure 4 illustrates the direction of the Horn–Schunck optical flow field computed over each image patch, revealing the predominant motion trends within the sequence.
+              Figure 4 also shows the output of the steerable Gaussian kernel applied to the L-channel, orthogonal to the direction of the flow field.
+            </p>
+
+            <p>
+              Across multiple experimental runs, we observed that the steerable Gaussian kernel did not substantially diminish the caustic artifacts. However, it did lead to a modest reduction in overall caustic brightness when larger patch sizes (i.e., greater than \(16 \times 16\) pixels) were employed. Additionally, we investigated the effect of adding Gaussian noise to the L-channel as a means of suppressing high-intensity caustic regions. This approach, however, proved ineffective: while it slightly reduced brightness, it also degraded edge preservation, rendering the scene content less decipherable.
+            </p>
+
+          <div class="text-center mt-4">
+              <video controls loop muted playsinline style="max-width: 720px; width: 100%; border-radius: 10px; border: 2px solid #88e1f2;">
+                <source src="./images/l_steerable_output.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="text-light mt-2">Figure 4: Steerable Gaussian Kernel Output</p>
+            </div>
+        </div>
 
 
 
@@ -530,19 +551,34 @@ canvas_html_content = """-->
 
 
         
-        <div id="part2">
+        <div id="conclusion">
           <h1 class="section-heading-alt">Conclusion and Future Directions</h1>
          </div>
-
+         
          <div class="section" id="conclusion">
-          <p> </p>
-        </div>
-
-  
-
-        <div class="section" id="discussion">
-          <h2>Summary and Implications</h2>
-          <p>This work aims to reduce caustic interference using a self-supervised and efficient model deployable on embedded systems. If successful, it can serve as a preprocessing step for undersea robotics, making downstream computer vision more robust in real-world deployments.</p>
+          <p>
+            We proposed a two-stage approach for undersea caustic mitigation: a self-supervised, low-compute filtering pipeline, and a pruned supervised segmentation model.
+            Temporal median filtering in the CIELAB L-channel effectively reduced high-frequency caustic fluctuations in static video sequences,
+            while steerable Gaussian filtering demonstrated the potential—but also limitations—of flow-guided smoothing under constrained computational budgets.
+          </p>
+          <p>
+            In the supervised domain, we retrained and compressed several fully convolutional networks on the R-CAUSTICS dataset.
+            Channel-wise pruning achieved significant model size reduction with minimal accuracy loss, particularly in SegNet,
+            which maintained strong performance with over 95% parameter sparsity.
+            These findings underscore the viability of deploying efficient caustic segmentation models on embedded systems.
+          </p>
+          <p>
+            A promising direction for future work is the utilization of the optical flow field not merely for steerable filtering,
+            but as a structural prior in more advanced, yet still lightweight, models.
+            For instance, flow-aligned temporal denoising or motion-guided frame interpolation could enhance caustic suppression by exploiting inter-frame coherence.
+            This would enable selective attenuation of dynamic lighting patterns while preserving true scene motion—potentially through flow-warped median filtering or adaptive spatiotemporal kernels.
+          </p>
+          <p>
+            Additional research should benchmark model performance on edge hardware, complete quantization-aware training pipelines,
+            and explore transformer-based segmentation models that can capture global spatial context.
+            Ultimately, extending this framework toward fully self-supervised learning—using temporal cycle-consistency or masked reconstruction objectives—
+            offers a scalable path for robust caustic mitigation without reliance on annotated datasets.
+          </p>
         </div>
 
         <div class="section" id="references">
