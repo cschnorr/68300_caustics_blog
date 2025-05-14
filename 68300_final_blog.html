@@ -453,11 +453,11 @@ canvas_html_content = """-->
           <div class="section" id="motivation">
             <h2>Motivation</h2>
             <p>
-              An early work on caustics removal in underwater images treated caustics identification as a sematic segmentation task, in which a deep neural network can be trained to perform pixel-wise identification of seafloor regions affected by caustics [1]. With an output segmentation mask, caustics can then be removed from the image by transferring color values from pixels unaffected by caustics in matched images of the same scene. To this end, images of seven different underwater scenes featuring caustics were collected, along with corresponding images where the caustics were removed by artificially blocking the sunlight above the water. These images were used to produce (binary) ground truth segmentation masks by taking the difference of the scene images with and without caustics and binarizing the result. The segmentation masks can then serve as training labels for supervised learning of caustics patterns. The results were published as the R-CAUSTICS dataset [1]. Figure 1 shows three examples of scenes and the corresponding ground truth caustics masks. Several scenes from this dataset also feature stereo images for SfM pipeline testing. We used this dataset as a starting point for developing a lightweight, deep learning-based approach to caustics identification.
+              An early work on caustics removal in underwater images treated caustics identification as a sematic segmentation task, in which a deep neural network can be trained to perform pixel-wise identification of seafloor regions affected by caustics [1]. With an output segmentation mask, caustics can then be removed from the image by transferring color values from pixels unaffected by caustics in matched images of the same scene. To this end, images of seven different underwater scenes featuring caustics were collected, along with corresponding images where the caustics were removed by artificially blocking the sunlight above the water. These images were used to produce (binary) ground truth segmentation masks by taking the difference of the scene images with and without caustics and binarizing the result. The segmentation masks can then serve as training labels for supervised learning of caustics patterns. The results were published as the R-CAUSTICS dataset [1]. Figure 4 shows three examples of scenes and the corresponding ground truth caustics masks. Several scenes from this dataset also feature stereo images for SfM pipeline testing. We used this dataset as a starting point for developing a lightweight, deep learning-based approach to caustics identification.
             </p>
             <div class="text-center">
               <img src="./images/Figure1.jpg" class="img-fluid" style="max-width: 720px; border: 2px solid #88e1f2; border-radius: 10px;">
-              <p class="text-light mt-2">Figure 1: Examples images and ground truth caustics patterns from scenes 2, 3 and 7 of the R-CAUSTICS dataset.</p>
+              <p class="text-light mt-2">Figure 5: Example images and ground truth caustics patterns from scenes 2, 3 and 7 of the R-CAUSTICS dataset.</p>
             </div>
           </div>
 
@@ -467,11 +467,11 @@ canvas_html_content = """-->
               The authors of the [1] trained six different fully-convolutional network (FCN) models across several different test-training splits of R-CAUSTICS. Model performance was quantified by the F1 score for caustics and non-caustics pixels respectively, as well as the total accuracy (percentage of pixels correctly classified). Based on the variety of the given scenes, they determined that training the model on subsets 3, 4, 5, 6 and 7 and testing it on subsets 1 and 2 was optimal, and we adopted this test-training split as well. In this dataset split, the performances of the six FCN models were more-or-less similar, with an F1 classification score of about 82% for caustic pixels and about 97% for non-caustic pixels, with total classification accuracies of about 95%. In the R-CAUSTICS images there are typically many more non-caustic pixels than caustic pixels, hence the total accuracy being close to the non-caustic prediction accuracy.
             </p>
             <p>
-              The trained model weights from the original work were not made publicly available, so we had to re-train the models ourselves before exploring model compression techniques to reduce the model sizes. We chose to focus on the FCN-ResNet50, FCN-ResNet101, and SegNet models with the expectation that while their performances may be similar prior to model compression, the differences in their architectures could make for an interesting contrast after compression. For model training and evaluation, we used a laptop with an NVIDIA GeForce RTX 4050 GPU.  Due to memory limitations, we trained the models with a batch size of 40 (rather than 60 as in the original paper), a shorter epoch length (1,000 image patches rather than 10,000) and over a limited subset of 180 images from the aforementioned R-CAUSTICS subset. Otherwise, we used the same training schedule (e.g. learning rate, momentum and weight decay). Training curves showing the cross-entropy loss and cross-validation accuracy (percentage of correctly-classified pixels) for our conditions are shown in Figure 2.
+              The trained model weights from the original work were not made publicly available, so we had to re-train the models ourselves before exploring model compression techniques to reduce the model sizes. We chose to focus on the FCN-ResNet50, FCN-ResNet101, and SegNet models with the expectation that while their performances may be similar prior to model compression, the differences in their architectures could make for an interesting contrast after compression. For model training and evaluation, we used a laptop with an NVIDIA GeForce RTX 4050 GPU.  Due to memory limitations, we trained the models with a batch size of 40 (rather than 60 as in the original paper), a shorter epoch length (1,000 image patches rather than 10,000) and over a limited subset of 180 images from the aforementioned R-CAUSTICS subset. Otherwise, we used the same training schedule (e.g. learning rate, momentum and weight decay). Training curves showing the cross-entropy loss and cross-validation accuracy (percentage of correctly-classified pixels) for our conditions are shown in Figure 5.
             </p>
             <div class="text-center">
               <img src="./images/Figure2.jpg" class="img-fluid" style="max-width: 720px; border: 2px solid #88e1f2; border-radius: 10px;">
-              <p class="text-light mt-2">Figure 2: Training loss and cross-validation accuracy for training the three selected FCN models over R-CAUSTICS subsets 3, 4, 5, 6 and 7.</p>
+              <p class="text-light mt-2">Figure 6: Training loss and cross-validation accuracy for training the three selected FCN models over R-CAUSTICS subsets 3, 4, 5, 6 and 7.</p>
             </div>
           </div>
 
@@ -513,12 +513,12 @@ canvas_html_content = """-->
             <p class="text-center text-light mt-2">Table 1: Parameters and FLOP operations associated with selected FCN models prior to pruning</p>
 
             <p>
-              In order to study how lightweight the resulting models could be made, we pruned each of the models with a variable pruning ratio, ranging from 0.5 to 0.95. The pruning ratio was applied globally, rather than per-layer, for a more aggressive pruning. Note that the final convolutional layer was eligible for pruning, as that would affect the number of classes in the semantic segmentation task (here, 2). After pruning, we finetuned the models for 3 epochs on the test set. The training accuracy loss and percentage of FLOPs pruned are plotted for ResNet50, ResNet101, and SegNet in Figure 3.
+              In order to study how lightweight the resulting models could be made, we pruned each of the models with a variable pruning ratio, ranging from 0.5 to 0.95. The pruning ratio was applied globally, rather than per-layer, for a more aggressive pruning. Note that the final convolutional layer was eligible for pruning, as that would affect the number of classes in the semantic segmentation task (here, 2). After pruning, we finetuned the models for 3 epochs on the test set. The training accuracy loss and percentage of FLOPs pruned are plotted for ResNet50, ResNet101, and SegNet in Figure 6.
             </p>
             <div class="text-center">
               <img src="./images/Figure3.jpg" class="img-fluid" style="width: 90%; border: 2px solid #88e1f2; border-radius: 10px;">
 
-              <p class="text-light mt-2">Figure 3: Accuracy loss and FLOPs pruned as a function of pruning ratio for the three selected models. The purple curve and yellow curve show the accuracy loss after pruning and after pruning plus finetuning, respectively.
+              <p class="text-light mt-2">Figure 7: Accuracy loss and FLOPs pruned as a function of pruning ratio for the three selected models. The purple curve and yellow curve show the accuracy loss after pruning and after pruning plus finetuning, respectively.
             </p>
             </div>
           </div>
@@ -574,14 +574,18 @@ canvas_html_content = """-->
             </table>
             <p class="text-light mt-2">Table 2: Accuracy at each step of the compression pipeline for FCN-ResNet50 and SegNet.</p>
           </div>
-          </div>
-
-          <div class="section" id="outlook2">
-            <h2>Outlook</h2>
             <p>
-              In the future, it could be valuable to study whether ViTs can outperform CNNs for caustics segmentation, as caustics often span large spatial extents and ViTs excel in modeling long-range dependencies. While ViTs typically require more memory and compute, they could also be amenable to pruning.  [[also about self-supervised approaches that we didn’t get around to trying…]]
+              Inspecting the output segmentation maps from each stage of the SegNet quantization and pruning pipeline (Figure 4), we can make the qualitative observation that unstructured pruning tends to broaden the features in the output maps even with finetuning, while quantization doesn’t make a clear visual difference in the result.
+            </p>
+
+          <div class="text-center">
+              <img src="./images/Figure4.jpg" class="img-fluid" style="width: 80%; border: 2px solid #88e1f2; border-radius: 10px;">
+
+              <p class="text-light mt-2">Figure 8: SegNet caustics segmentation model applied to R-CAUSTICS images (top row) prior to compression (2nd row), after pruning and fine-tuning (3rd row), and after quantization (4th row). Ground truth caustics labels are included for reference (5th row).
             </p>
           </div>
+          </div>
+  
         </div>
 
 
@@ -593,7 +597,7 @@ canvas_html_content = """-->
          
          <div class="section" id="conclusion">
           <p>
-            We proposed a two-stage approach for undersea caustic mitigation: a low-compute filtering pipeline, and a pruned supervised segmentation model.
+            We proposed a complimentary approach for undersea caustic mitigation: a low-compute filtering pipeline, and a compressed segmentation model.
             Temporal median filtering in the CIELAB L-channel effectively reduced high-frequency caustic fluctuations in static video sequences,
             while steerable Gaussian filtering demonstrated the potential—but also limitations—of flow-guided smoothing under constrained computational budgets.
           </p>
