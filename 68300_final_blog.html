@@ -456,7 +456,7 @@ canvas_html_content = """-->
               An early work on caustics removal in underwater images treated caustics identification as a sematic segmentation task, in which a deep neural network can be trained to perform pixel-wise identification of seafloor regions affected by caustics [1]. With an output segmentation mask, caustics can then be removed from the image by transferring color values from pixels unaffected by caustics in matched images of the same scene. To this end, images of seven different underwater scenes featuring caustics were collected, along with corresponding images where the caustics were removed by artificially blocking the sunlight above the water. These images were used to produce (binary) ground truth segmentation masks by taking the difference of the scene images with and without caustics and binarizing the result. The segmentation masks can then serve as training labels for supervised learning of caustics patterns. The results were published as the R-CAUSTICS dataset [1]. Figure 1 shows three examples of scenes and the corresponding ground truth caustics masks. Several scenes from this dataset also feature stereo images for SfM pipeline testing. We used this dataset as a starting point for developing a lightweight, deep learning-based approach to caustics identification.
             </p>
             <div class="text-center">
-              <img src="./images/figure1_720.png" class="img-fluid" style="max-width: 720px; border: 2px solid #88e1f2; border-radius: 10px;">
+              <img src="./images/Figure1.jpg" class="img-fluid" style="max-width: 720px; border: 2px solid #88e1f2; border-radius: 10px;">
               <p class="text-light mt-2">Figure 1: Examples images and ground truth caustics patterns from scenes 2, 3 and 7 of the R-CAUSTICS dataset.</p>
             </div>
           </div>
@@ -470,7 +470,7 @@ canvas_html_content = """-->
               The trained model weights from the original work were not made publicly available, so we had to re-train the models ourselves before exploring model compression techniques to reduce the model sizes. We chose to focus on the FCN-ResNet50, FCN-ResNet101, and SegNet models with the expectation that while their performances may be similar prior to model compression, the differences in their architectures could make for an interesting contrast after compression. For model training and evaluation, we used a laptop with an NVIDIA GeForce RTX 4050 GPU.  Due to memory limitations, we trained the models with a batch size of 40 (rather than 60 as in the original paper), a shorter epoch length (1,000 image patches rather than 10,000) and over a limited subset of 180 images from the aforementioned R-CAUSTICS subset. Otherwise, we used the same training schedule (e.g. learning rate, momentum and weight decay). Training curves showing the cross-entropy loss and cross-validation accuracy (percentage of correctly-classified pixels) for our conditions are shown in Figure 2.
             </p>
             <div class="text-center">
-              <img src="./images/figure2_720.png" class="img-fluid" style="max-width: 720px; border: 2px solid #88e1f2; border-radius: 10px;">
+              <img src="./images/Figure2.jpg" class="img-fluid" style="max-width: 720px; border: 2px solid #88e1f2; border-radius: 10px;">
               <p class="text-light mt-2">Figure 2: Training loss and cross-validation accuracy for training the three selected FCN models over R-CAUSTICS subsets 3, 4, 5, 6 and 7.</p>
             </div>
           </div>
@@ -516,11 +516,9 @@ canvas_html_content = """-->
               In order to study how lightweight the resulting models could be made, we pruned each of the models with a variable pruning ratio, ranging from 0.5 to 0.95. The pruning ratio was applied globally, rather than per-layer, for a more aggressive pruning. Note that the final convolutional layer was eligible for pruning, as that would affect the number of classes in the semantic segmentation task (here, 2). After pruning, we finetuned the models for 3 epochs on the test set. The training accuracy loss and percentage of FLOPs pruned are plotted for ResNet50, ResNet101, and SegNet in Figure 3.
             </p>
             <div class="text-center">
-              <img src="./images/figure4_720.jpg" class="img-fluid" style="width: 90%; border: 2px solid #88e1f2; border-radius: 10px;">
+              <img src="./images/Figure3.jpg" class="img-fluid" style="width: 90%; border: 2px solid #88e1f2; border-radius: 10px;">
 
-              <p class="text-light mt-2">Figure 3: SegNet caustics segmentation model applied to R-CAUSTICS images (top row) 
-              prior to compression (2nd row), after pruning and fine-tuning (3rd row), and after quantization 
-                (4th row). Ground truth caustics labels are included for reference (5th row). 
+              <p class="text-light mt-2">Figure 3: Accuracy loss and FLOPs pruned as a function of pruning ratio for the three selected models. The purple curve and yellow curve show the accuracy loss after pruning and after pruning plus finetuning, respectively.
             </p>
             </div>
           </div>
@@ -537,14 +535,45 @@ canvas_html_content = """-->
               Among the three models, SegNet is the most robust to channel-wise pruning. Remarkably, we find that  over 95% of parameters can be pruned while an incurring an accuracy loss of less than 5%. This robustness to pruning can also potentially be explained by the model architecture. Unlike the ResNet models, SegNet does not feature residual connections, which force strict alignment of shapes and make pruning less flexible. The increased flexibility allows for greater independence between layers, enabling more aggressive pruning without disrupting downstream representations.
             </p>
             <p>
-              The two approaches we considered for quantizing the models were QAT and dynamic quantization. [[dynamic quantization gives no savings for convolutional layers]] [[QAT not compatible with off-the-shelf ResNet models – or, at-least, it requires fusing layers…]] [[in QAT, we fine-tune on the test data]]
+              Next, we considered compressing the models further using static and dynamic quantization. Static and dynamic quantization are both forms of linear quantization, in which floating-point weights and activations are mapped to int8 values by scaling them and adding a zero-point offset, then rounding. In static quantization, the scale and offset factors are pre-computed using calibration data. In dynamic quantization, the activation quantization happens on-the-fly, based on batch statistics. Dynamic quantization is better-suited for fully-connected layers than convolutional layers, as the large 4D tensors involved in convolutional layers are much more time-consuming to quantize on-the-fly.
             </p>
             <p>
-              [[definitely show some visuals of the pruned/quantized models applied to real images!]]
+              Unfortunately, the module we attempted to use for quantization (torch.ao.quantization) was not able to perform static quantization on the channel-pruned output layers due to support issues that we were not able to solve in time. As a backup, we applied dynamic pruning to our three models after performing unstructured weight pruning with a 50% pruning ratio and fine-tuning. The caustics identification accuracy prior to pruning, after and finetuning, and after dynamic quantization for FCN-ResNet50 and SegNet are shown in Table 2.
             </p>
-            <p>
-              [[must measure inference time…]]
-            </p>
+            <div class="text-center">
+            <table class="table table-bordered text-light" style="max-width: 640px; margin: auto;">
+              <thead class="table-light text-dark">
+                <tr>
+                  <th><strong>Accuracy</strong></th>
+                  <th>FCN-ResNet50</th>
+                  <th>SegNet</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Baseline</td>
+                  <td>90.1%</td>
+                  <td>90.4%</td>
+                </tr>
+                <tr>
+                  <td>50% unstructured pruning</td>
+                  <td>90.8%</td>
+                  <td>84.1%</td>
+                </tr>
+                <tr>
+                  <td>Pruning + finetuning</td>
+                  <td>90.4%</td>
+                  <td>91.4%</td>
+                </tr>
+                <tr>
+                  <td>Pruning + dynamic quantization</td>
+                  <td>91.1%</td>
+                  <td>90.7%</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="text-light mt-2">Table 2: Accuracy at each step of the compression pipeline for FCN-ResNet50 and SegNet.</p>
+          </div>
           </div>
 
           <div class="section" id="outlook2">
