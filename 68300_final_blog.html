@@ -513,9 +513,12 @@ canvas_html_content = """-->
               In order to study how lightweight the resulting models could be made, we pruned each of the models with a variable pruning ratio, ranging from 0.5 to 0.95. The pruning ratio was applied globally, rather than per-layer, for a more aggressive pruning. Note that the final convolutional layer was eligible for pruning, as that would affect the number of classes in the semantic segmentation task (here, 2). After pruning, we finetuned the models for 3 epochs on the test set. The training accuracy loss and percentage of FLOPs pruned are plotted for ResNet50, ResNet101, and SegNet in Figure 3.
             </p>
             <div class="text-center">
-              <img src="./images/figure3_720.png" class="img-fluid" style="width: 90%; border: 2px solid #88e1f2; border-radius: 10px;">
+              <img src="./images/figure4_720.png" class="img-fluid" style="width: 90%; border: 2px solid #88e1f2; border-radius: 10px;">
 
-              <p class="text-light mt-2">Figure 3: Accuracy loss and FLOPs pruned as a function of pruning ratio for the three selected models. The purple curve and yellow curve show the accuracy loss after pruning and after pruning plus finetuning, respectively.</p>
+              <p class="text-light mt-2">Figure 3: SegNet caustics segmentation model applied to R-CAUSTICS images (top row) 
+              prior to compression (2nd row), after pruning and fine-tuning (3rd row), and after quantization 
+                (4th row). Ground truth caustics labels are included for reference (5th row). 
+            </p>
             </div>
           </div>
 
