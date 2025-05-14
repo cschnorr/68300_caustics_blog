@@ -367,7 +367,7 @@ canvas_html_content = """-->
             <h3>Methodology</h3>
             <ol>
               <li>
-                <strong>Compute Horn–Schunck Optical Flow</strong><br>
+                <strong>Compute Horn–Schunck Optical Flow</strong> [4]<br>
                 Estimate the global flow field \( \mathbf{u}, \mathbf{v} \) over the L-channel by minimizing:
                 <p>
                   \[
@@ -395,7 +395,7 @@ canvas_html_content = """-->
                 <strong>Apply Steerable Filtering per Patch</strong>
                 <ul>
                   <li>Extract local patches from the L-channel</li>
-                  <li>Apply a <strong>steerable Gaussian derivative filter</strong> oriented at angle \( \theta \). Angles orthogonal to \( \theta \) were also tested and improved edge preservation.</li>
+                  <li>Apply a <strong>steerable Gaussian derivative filter</strong> oriented at angle \( \theta \). Angles orthogonal to \( \theta \) were also tested and improved edge preservation. [3]</li>
                 </ul>
               </li>
 
@@ -409,7 +409,7 @@ canvas_html_content = """-->
                       G_\theta = \cos(\theta) G_x + \sin(\theta) G_y
                       \]
                     </p>
-                    We experimented with applying steerable filters both <strong>orthogonal</strong> and <strong>parallel</strong> to the estimated motion direction. Orthogonal filtering tended to suppress caustics more effectively by smoothing across their directional edges.
+                    We experimented with applying steerable filters both <strong>orthogonal</strong> and <strong>parallel</strong> to the estimated motion direction. Orthogonal filtering tended to suppress caustics more effectively by smoothing across their directional edges. [3]
                   </li>
                   <li>
                     <strong>Library-based:</strong> Use tools like:
@@ -624,17 +624,18 @@ canvas_html_content = """-->
         <div class="section" id="references">
           <h2>Bibliography</h2>
           <div class="citation">
-            [1] P. Agrafiotis, K. Karantzalos, IEEE 2023.<br>
+            [1] Agrafiotis et al., IEEE J. Ocean. Eng., 2023.<br>
             [2] Sauder & Tuia, ECCV 2024.<br>
-            [3] Forbes et al., IEEE J. Ocean. Eng., 2019.<br>
-            [4] Agrafiotis et al., IEEE J. Ocean. Eng., 2023.<br>
-            [5] Zhang et al., IEEE RAL, 2024.<br>
-            [6] Hernandez & Brown, arXiv:2005.04305.<br>
-            [7] Agrafiotis et al., IEEE J. Ocean. Eng., 2023 (R-CAUSTIC dataset).
-            [8] Freeman & Adelson, IEEE PAMI, 1991.<br>
-            [9] Treiber et al., IEEE PAMI, 2009.<br>
-            [10] Zhang et al., arXiv:2305.04305.
+            [3] Freeman & Adelson, IEEE PAMI, 1991.<br>
+            [4] Horn & Schunck, Artificial Intelligence, 1981.<br>
+            [5] Zhang et al., arXiv:2305.04305.<br>
+            [6] Agrafiotis et al., IEEE J. Ocean. Eng., 2023 (R-CAUSTIC dataset).<br>
+            [7] Treiber et al., IEEE PAMI, 2009.<br>
+            [8] Zhang et al., arXiv:2305.04305.<br>
+            [9] Sauder & Tuia, ECCV 2024.<br>
+            [10] Freeman & Adelson, IEEE PAMI, 1991.
           </div>
+     
         </div>
       </div>
     </div>
