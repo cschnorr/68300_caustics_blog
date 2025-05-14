@@ -353,7 +353,7 @@ canvas_html_content = """-->
               </ul>
             <h3>Rationale</h3>
               <p>
-                The median filter is particularly well-suited to undersea environments due to its robustness to non-Gaussian noise and outliers. As shown in Treiber et al., 2009, median-based approaches are effective for background estimation in dynamic scenes, and this principle translates well to marine imagery where illumination is the dynamic variable.
+                The median filter is particularly well-suited to undersea environments due to its robustness to non-Gaussian noise and outliers. As shown in Treiber et al. [1], median-based approaches are effective for background estimation in dynamic scenes, and this principle translates well to marine imagery where illumination is the dynamic variable.
               </p>
         </div>
 
@@ -453,7 +453,7 @@ canvas_html_content = """-->
           <div class="section" id="motivation">
             <h2>Motivation</h2>
             <p>
-              An early work on caustics removal in underwater images treated caustics identification as a sematic segmentation task, in which a deep neural network can be trained to perform pixel-wise identification of seafloor regions affected by caustics [7]. With an output segmentation mask, caustics can then be removed from the image by transferring color values from pixels unaffected by caustics in matched images of the same scene. To this end, images of seven different underwater scenes featuring caustics were collected, along with corresponding images where the caustics were removed by artificially blocking the sunlight above the water. These images were used to produce (binary) ground truth segmentation masks by taking the difference of the scene images with and without caustics and binarizing the result. The segmentation masks can then serve as training labels for supervised learning of caustics patterns. The results were published as the R-CAUSTICS dataset [1]. Figure 5 shows three examples of scenes and the corresponding ground truth caustics masks. Several scenes from this dataset also feature stereo images for SfM pipeline testing. We used this dataset as a starting point for developing a lightweight, deep learning-based approach to caustics identification.
+              An early work on caustics removal in underwater images treated caustics identification as a sematic segmentation task, in which a deep neural network can be trained to perform pixel-wise identification of seafloor regions affected by caustics [5]. With an output segmentation mask, caustics can then be removed from the image by transferring color values from pixels unaffected by caustics in matched images of the same scene. To this end, images of seven different underwater scenes featuring caustics were collected, along with corresponding images where the caustics were removed by artificially blocking the sunlight above the water. These images were used to produce (binary) ground truth segmentation masks by taking the difference of the scene images with and without caustics and binarizing the result. The segmentation masks can then serve as training labels for supervised learning of caustics patterns. The results were published as the R-CAUSTICS dataset [1]. Figure 5 shows three examples of scenes and the corresponding ground truth caustics masks. Several scenes from this dataset also feature stereo images for SfM pipeline testing. We used this dataset as a starting point for developing a lightweight, deep learning-based approach to caustics identification.
             </p>
             <div class="text-center">
               <img src="./images/Figure1.jpg" class="img-fluid" style="max-width: 720px; border: 2px solid #88e1f2; border-radius: 10px;">
@@ -526,7 +526,7 @@ canvas_html_content = """-->
           <div class="section" id="observations">
             <h2>Observations</h2>
             <p>
-              The loss of accuracy upon initial pruning is fairly constant across models and pruning ratios, and the accuracy of all models is mostly recovered by fine-tuning for moderate (40-60%) pruning ratios. There are also several instances in which the accuracy slightly increases above the baseline after finetuning, which could be attributable to the “lottery ticket hypothesis,” in which pruning isolates a more effective subnetwork [8]. Alternatively, the occasional improvement in accuracy above the baseline could be due to the regularization effect of pruning and retraining, which can help the model escape sharp local minima.
+              The loss of accuracy upon initial pruning is fairly constant across models and pruning ratios, and the accuracy of all models is mostly recovered by fine-tuning for moderate (40-60%) pruning ratios. There are also several instances in which the accuracy slightly increases above the baseline after finetuning, which could be attributable to the “lottery ticket hypothesis,” in which pruning isolates a more effective subnetwork [2]. Alternatively, the occasional improvement in accuracy above the baseline could be due to the regularization effect of pruning and retraining, which can help the model escape sharp local minima.
             </p>
             <p>
               Interestingly, the post-finetuning accuracy loss is generally worse for the ResNet101 model than for the ResNet50 model, in contrast to our hypothesis that many of weights in the more heavily-overparameterized model are redundant. This can potentially be explained by considering the structures of the two models. In particular, ResNet101 is a deeper model than ResNet50 but has the same width (number of channels). Channel-wise pruning reduces the width of the convolutional layers but leaves the depth unchanged, and in a deeper network, the effect of pruning early layers propagates further downstream, making the deeper model (ResNet101) potentially more sensitive to pruning. 
@@ -623,18 +623,16 @@ canvas_html_content = """-->
 
         <div class="section" id="references">
           <h2>Bibliography</h2>
-          <div class="citation">
-            [1] Agrafiotis et al., IEEE J. Ocean. Eng., 2023.<br>
-            [2] Sauder & Tuia, ECCV 2024.<br>
-            [3] Freeman & Adelson, IEEE PAMI, 1991.<br>
-            [4] Horn & Schunck, Artificial Intelligence, 1981.<br>
-            [5] Zhang et al., arXiv:2305.04305.<br>
-            [6] Agrafiotis et al., IEEE J. Ocean. Eng., 2023 (R-CAUSTIC dataset).<br>
-            [7] Treiber et al., IEEE PAMI, 2009.<br>
-            [8] Zhang et al., arXiv:2305.04305.<br>
-            [9] Sauder & Tuia, ECCV 2024.<br>
-            [10] Freeman & Adelson, IEEE PAMI, 1991.
-          </div>
+          
+<div class="citation">
+  [1] Treiber et al., IEEE PAMI, 2009.<br>
+  [2] Sauder & Tuia, ECCV 2024.<br>
+  [3] Freeman & Adelson, IEEE PAMI, 1991.<br>
+  [4] Horn & Schunck, Artificial Intelligence, 1981.<br>
+  [5] Agrafiotis et al., IEEE J. Ocean. Eng., 2023 (R-CAUSTIC dataset).<br>
+  [6] Zhang et al., arXiv:2305.04305.<br>
+</div>
+
      
         </div>
       </div>
