@@ -5,7 +5,7 @@ canvas_html_content = """-->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Self-Supervised Caustics Reduction in Undersea Vision</title>
+  <title>Efficient Caustics Reduction in Undersea Vision</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -183,7 +183,7 @@ canvas_html_content = """-->
   <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col-md-10 text-center">
-  <div class="header-title">Self-Supervised Caustics Reduction in Undersea Vision</div>
+  <div class="header-title">Efficient Caustics Reduction in Undersea Vision</div>
   <div class="mb-2">Final Project for 6.8300 - MIT</div>
   <div class="row justify-content-center mt-3">
     <div class="col-md-5">
@@ -239,7 +239,7 @@ canvas_html_content = """-->
         <div class="section" id="goal">
           <h2>Project Objective</h2>
           <p>Underwater vision faces unique challenges—especially due to caustics created by refracted light. These distortions can disrupt tasks like segmentation and 3D reconstruction. <br> <br>
-            Our project proposes a self-supervised method to remove these caustics, leveraging temporal consistency across video frames without requiring labeled ground truth.
+            Our project proposes a low-cost, efficient method to remove these caustics, leveraging temporal consistency across video frames without requiring labeled ground truth.
             The second portion of the project focuses on model pruning and quantization to further enhance efficiency. We will explore the trade-offs between model size and performance, aiming to create a model that is both effective and deployable on resource-constrained devices.
           </p>
         </div>
@@ -561,7 +561,7 @@ canvas_html_content = """-->
          
          <div class="section" id="conclusion">
           <p>
-            We proposed a two-stage approach for undersea caustic mitigation: a self-supervised, low-compute filtering pipeline, and a pruned supervised segmentation model.
+            We proposed a two-stage approach for undersea caustic mitigation: a low-compute filtering pipeline, and a pruned supervised segmentation model.
             Temporal median filtering in the CIELAB L-channel effectively reduced high-frequency caustic fluctuations in static video sequences,
             while steerable Gaussian filtering demonstrated the potential—but also limitations—of flow-guided smoothing under constrained computational budgets.
           </p>
